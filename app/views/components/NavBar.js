@@ -1,9 +1,37 @@
 export default {
   name: 'NavBar',
   props: {
+    // Existing array input still works
     items: {
       type: Array,
       default: () => [],
+    },
+    // New: accept a Map or plain object
+    itemsMap: {
+      type: [Object],
+      default: null,
+    },
+  },
+  computed: {
+    normalizedItems() {
+      if (Array.isArray(this.items) && this.items.length) return this.items;
+      const m = this.itemsMap;
+      if (m && typeof m === 'object') {
+        const arr = [];
+        if (m instanceof Map) {
+          for (const [key, val] of m) {
+            if (typeof val === 'string') arr.push({ key, label: key, href: val });
+            else arr.push({ key, label: val.label ?? key, href: val.href, target: val.target });
+          }
+        } else {
+          for (const [key, val] of Object.entries(m)) {
+            if (typeof val === 'string') arr.push({ key, label: key, href: val });
+            else arr.push({ key, label: val.label ?? key, href: val.href, target: val.target });
+          }
+        }
+        return arr;
+      }
+      return [];
     },
   },
   template: /* html */ `
@@ -11,12 +39,11 @@ export default {
       <div class="navbar__inner">
         <div class="navbar__brand">takoBox</div>
         <ul class="navbar__menu">
-          <li v-for="(item, i) in items" :key="i">
-            <a :href="item.href">{{ item.label }}</a>
+          <li v-for="(item, i) in normalizedItems" :key="item.key || i">
+            <a :href="item.href" :target="item.target || null">{{ item.label }}</a>
           </li>
         </ul>
       </div>
     </nav>
   `,
 };
-

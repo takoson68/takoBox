@@ -4,11 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Vue 3 CDN Starter</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+          "app/": "./app/",
+          "views/": "./app/views/",
+          "controllers/": "./app/controllers/"
+        }
+      }
+    </script>
+
     <style>
       :root { color-scheme: light dark; }
-      body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans TC", "Microsoft JhengHei", sans-serif; display: grid; place-items: center; min-height: 100vh; }
-      /* keep content below fixed navbar */
-      body { padding-top: 56px; }
+      body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans TC", "Microsoft JhengHei", sans-serif; display: grid; place-items: center; min-height: 100vh; padding-top: 56px; }
 
       /* Navbar */
       .navbar { position: fixed; top: 0; left: 0; right: 0; height: 56px; display: flex; align-items: center; backdrop-filter: blur(6px); background: color-mix(in oklab, Canvas, transparent 70%); border-bottom: 1px solid #0001; z-index: 1000; }
@@ -22,27 +32,24 @@
       .card { padding: 24px; border-radius: 12px; border: 1px solid #0001; background: #fff2; backdrop-filter: blur(6px); text-align: center; }
       button { padding: 8px 12px; border-radius: 8px; border: 1px solid #0002; }
     </style>
+
     <script type="module">
-      import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
-      import NavBar from './app/views/components/NavBar.js';
+      import { createApp, ref } from 'vue';
+      import NavBar from 'views/components/NavBar.js';
+      import menuMap from 'controllers/menuRoutes.js';
 
       createApp({
         components: { NavBar },
         setup() {
           const count = ref(0);
-          const menuItems = [
-            { label: '首頁', href: '#' },
-            { label: '關於', href: '#about' },
-            { label: 'GitHub', href: 'https://github.com' },
-          ];
-          return { count, menuItems };
+          return { count, menuMap };
         },
       }).mount('#app');
     </script>
   </head>
   <body>
     <div id="app">
-      <nav-bar :items="menuItems"></nav-bar>
+      <nav-bar :items-map="menuMap"></nav-bar>
 
       <div class="card">
         <h1>Vue 3 + CDN</h1>
@@ -51,4 +58,5 @@
       </div>
     </div>
   </body>
-  </html>
+</html>
+
