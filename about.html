@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vue 3 CDN Starter</title>
+    <title>About - Vue 3 CDN Starter</title>
 
     <script type="importmap">
       {
@@ -18,15 +18,14 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
     <link rel="stylesheet" href="public/assets/css/global.css" />
 
-    <script type="module" src="public/assets/js/index.js"></script>
+    <script type="module" src="public/assets/js/about.js"></script>
   </head>
   <body>
     <div id="app" v-cloak>
       <app-layout :menu-map="menuMap" v-cloak>
         <div class="card">
-          <h1>Vue 3 + CDN</h1>
-          <p>Count: {{ count }}</p>
-          <button @click="count++">Increment</button>
+          <h1>關於 About</h1>
+          <p class="lead">這是一個使用共用 Layout 的示範頁面。</p>
         </div>
       </app-layout>
     </div>

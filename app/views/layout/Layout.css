@@ -1,0 +1,10 @@
+/* Layout component styles */
+/* Keep content below fixed navbar */
+body { padding-top: 56px; }
+
+.container {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
+

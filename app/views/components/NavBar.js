@@ -12,6 +12,17 @@ export default {
       default: null,
     },
   },
+  mounted() {
+    // Lazy-load component stylesheet once per page
+    const id = 'css-NavBar';
+    if (!document.getElementById(id)) {
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      link.href = new URL('./NavBar.css', import.meta.url).href;
+      document.head.appendChild(link);
+    }
+  },
   computed: {
     normalizedItems() {
       if (Array.isArray(this.items) && this.items.length) return this.items;
