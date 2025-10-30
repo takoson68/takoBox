@@ -3,108 +3,76 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TakoBox Templates</title>
+    <title>Tako Static Site</title>
+    <meta name="description" content="No-build Preact app for GitHub Pages" />
     <style>
-      :root { color-scheme: light dark; }
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans TC", "Microsoft JhengHei", sans-serif; margin: 0; padding: 0 16px 48px; }
-      header { max-width: 960px; margin: 24px auto; padding: 8px 0; }
-      h1 { margin: 0 0 8px; font-size: 28px; }
-      p.lead { margin: 0; opacity: 0.8; }
-      main { max-width: 960px; margin: 24px auto; }
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-      .card { border: 1px solid #00000022; border-radius: 12px; padding: 16px; background: #ffffff10; backdrop-filter: blur(4px); }
-      .card h3 { margin: 0 0 6px; }
-      .muted { opacity: 0.7; font-size: 14px; }
-      .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-      a.btn { text-decoration: none; display: inline-block; padding: 8px 12px; border-radius: 8px; border: 1px solid #00000022; }
-      footer { max-width: 960px; margin: 24px auto; opacity: 0.7; font-size: 14px; }
-      code { padding: 2px 6px; border-radius: 6px; background: #00000011; }
-      .error { border-color: #d33; color: #d33; }
+      :root {
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        line-height: 1.5;
+        font-weight: 400;
+        color: #0f172a;
+        background-color: #f8fafc;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .app {
+        max-width: 420px;
+        padding: 2.5rem;
+        border-radius: 1.25rem;
+        background: linear-gradient(145deg, #e2e8f0, #ffffff);
+        box-shadow: 0 20px 25px -15px rgba(15, 23, 42, 0.25);
+        text-align: center;
+      }
+      button {
+        margin-top: 1.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        border: none;
+        background: #2563eb;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+      button:hover {
+        transform: translateY(-2px);
+        background: #1d4ed8;
+      }
     </style>
   </head>
   <body>
-    <header>
-      <h1>TakoBox 範本總覽</h1>
-      <p class="lead">此頁作為 GitHub Pages 入口（index.html 位於倉庫根目錄）。</p>
-    </header>
-    <main>
-      <section>
-        <h2>可用範本</h2>
-        <div id="templates" class="grid" aria-live="polite"></div>
-        <div id="fallback" class="card error" style="display:none; margin-top: 16px;">
-          <strong>讀取清單失敗</strong>
-          <p class="muted">請確認 <code>core/templates/manifest.json</code> 存在，並已啟用 GitHub Pages。</p>
-        </div>
-      </section>
-      <section style="margin-top:24px;">
-        <h2>在本機或 GitHub Pages 上查看</h2>
-        <ul>
-          <li>本頁僅是靜態導覽，實際程式碼位於 <code>core/templates/</code>。</li>
-          <li>點擊「View README」可在 GitHub 上閱讀對應範本的使用說明。</li>
-          <li>若需可執行的 Demo，請將某個範本獨立成專案並部署其 <code>dist/</code> 至 Pages。</li>
-        </ul>
-      </section>
-    </main>
-    <footer>
-      <p>Powered by TakoBox templates.</p>
-    </footer>
+    <div id="app"></div>
+    <script type="module">
+      import { h, render } from 'https://esm.sh/preact@10.19.2';
+      import { useState } from 'https://esm.sh/preact@10.19.2/hooks';
+      import htm from 'https://esm.sh/htm@3.1.1/preact';
 
-    <script>
-      async function loadTemplates() {
-        const container = document.getElementById('templates');
-        const fallback = document.getElementById('fallback');
-        try {
-          const res = await fetch('core/templates/manifest.json', { cache: 'no-store' });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const data = await res.json();
+      const html = htm.bind(h);
 
-          // Derive GitHub repo URL from Pages URL (works on GitHub Pages project sites)
-          const host = window.location.host; // e.g. user.github.io
-          const username = host.split('.')[0];
-          const pathParts = window.location.pathname.split('/').filter(Boolean); // [repo, ...]
-          const repo = pathParts.length > 0 ? pathParts[0] : '';
-          const githubBase = (username && repo)
-            ? `https://github.com/${username}/${repo}`
-            : null;
+      const messages = [
+        'Welcome to the Tako static site template!',
+        'Edit src/App.jsx and save to test hot module replacement.',
+        'Use pnpm or npm to manage dependencies inside the Nix shell.',
+      ];
 
-          const list = (data.templates || []).map(t => {
-            const name = t.name || 'template';
-            const desc = t.description || '';
-            const path = t.path || name;
+      function App() {
+        const [index, setIndex] = useState(0);
+        const cycleMessage = () => setIndex((index + 1) % messages.length);
 
-            const readmeLink = githubBase
-              ? `${githubBase}/blob/main/core/templates/${path}/README.md`
-              : null;
-            const srcLink = githubBase
-              ? `${githubBase}/tree/main/core/templates/${path}`
-              : null;
-
-            return { name, desc, path, readmeLink, srcLink };
-          });
-
-          if (list.length === 0) {
-            container.innerHTML = '<div class="card">未找到任何範本。</div>';
-            return;
-          }
-
-          container.innerHTML = list.map(item => `
-            <article class="card">
-              <h3>${item.name}</h3>
-              <p class="muted">${item.desc}</p>
-              <div class="row">
-                ${item.readmeLink ? `<a class="btn" href="${item.readmeLink}" target="_blank" rel="noopener">View README</a>` : ''}
-                ${item.srcLink ? `<a class="btn" href="${item.srcLink}" target="_blank" rel="noopener">View Source</a>` : ''}
-                <a class="btn" href="core/templates/${item.path}/" rel="noopener">Open folder</a>
-              </div>
-            </article>
-          `).join('');
-        } catch (err) {
-          console.error(err);
-          fallback.style.display = 'block';
-        }
+        return html`<main class="app">
+          <h1>Tako Static Site</h1>
+          <p>${messages[index]}</p>
+          <button type="button" onClick=${cycleMessage}>Cycle message</button>
+        </main>`;
       }
 
-      loadTemplates();
+      const container = document.getElementById('app');
+      render(html`<${App} />`, container);
     </script>
   </body>
   </html>
