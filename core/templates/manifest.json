@@ -1,9 +1,0 @@
-{
-  "templates": [
-    {
-      "name": "static-site",
-      "description": "No-build Preact static site (CDN) for GitHub Pages",
-      "path": "static-site"
-    }
-  ]
-}
