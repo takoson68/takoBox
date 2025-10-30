@@ -6,9 +6,9 @@
 
 1. 安裝依賴：`npm install`
 2. 打包輸出：`npm run build`
-   - Rollup 會將 `src/entry/index.js`、`src/entry/about.js` 的 Bundler 版本（含全域樣式匯入）打包為 `docs/assets/js/`。
-   - `rollup-plugin-postcss` 會把 `src/styles/global.css` 抽成 `docs/assets/css/bundle.css`。
-   - `scripts/postbuild.mjs` 會同步產生 `docs/index.html`、`docs/about.html`，調整資源路徑，並複製元件用的懶載入 CSS 與靜態資產。
+   - Rollup 會將 `src/entry/*.bundle.js`（內含 `@/styles/all.css` 匯入）編譯成 `docs/assets/js/` 中的 ES Modules。
+   - `rollup-plugin-postcss` 會把 `src/styles/all.css`（涵蓋全域與元件樣式）整併為 `docs/assets/css/bundle.css`。
+   - `scripts/postbuild.mjs` 會產生 `docs/index.html`、`docs/about.html`，調整資源路徑並複製靜態資產。
 3. 將 `docs/` 設定為 GitHub Pages 的發佈目錄即可上線。
 
 ## 佈署到 GitHub Pages

@@ -1,5 +1,5 @@
-import { mkdir, readFile, writeFile, cp, readdir, stat, rename } from 'node:fs/promises';
-import { basename, dirname, resolve } from 'node:path';
+import { mkdir, readFile, writeFile, cp, rename } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -30,28 +30,6 @@ try {
   }
 }
 
-// Copy component-scoped CSS next to bundled JS (lazy-loaded via import.meta.url)
-async function collectCssFiles(dir) {
-  const entries = await readdir(dir);
-  const files = [];
-  for (const entry of entries) {
-    const fullPath = resolve(dir, entry);
-    const entryStat = await stat(fullPath);
-    if (entryStat.isDirectory()) {
-      files.push(...(await collectCssFiles(fullPath)));
-    } else if (fullPath.endsWith('.css')) {
-      files.push(fullPath);
-    }
-  }
-  return files;
-}
-
-const viewCssFiles = await collectCssFiles(resolve(rootDir, 'src', 'views'));
-for (const file of viewCssFiles) {
-  const dest = resolve(jsDir, basename(file));
-  await cp(file, dest, { force: true });
-}
-
 // Transform HTML files for production output
 const htmlFiles = ['index.html', 'about.html'];
 const importMapRegex = /<script type="importmap">[\s\S]*?<\/script>\s*/g;
@@ -63,7 +41,7 @@ for (const file of htmlFiles) {
 
   html = html
     .replace(importMapRegex, '')
-    .replace('./src/styles/global.css', './assets/css/bundle.css')
+    .replace('./src/styles/all.css', './assets/css/bundle.css')
     .replace(`./src/entry/${file === 'index.html' ? 'index' : 'about'}.js`, `./assets/js/${file === 'index.html' ? 'index' : 'about'}.js`);
 
   await writeFile(destPath, html);

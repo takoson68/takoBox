@@ -12,17 +12,6 @@ var NavBar = {
       default: null,
     },
   },
-  mounted() {
-    // Lazy-load component stylesheet once per page
-    const id = 'css-NavBar';
-    if (!document.getElementById(id)) {
-      const link = document.createElement('link');
-      link.id = id;
-      link.rel = 'stylesheet';
-      link.href = new URL('./NavBar.css', import.meta.url).href;
-      document.head.appendChild(link);
-    }
-  },
   computed: {
     normalizedItems() {
       if (Array.isArray(this.items) && this.items.length) return this.items;
@@ -66,17 +55,6 @@ var AppLayout = {
     menuMap: { type: Object, default: null },
     title: { type: String, default: '' },
   },
-  mounted() {
-    // Lazy-load layout stylesheet once per page
-    const id = 'css-Layout';
-    if (!document.getElementById(id)) {
-      const link = document.createElement('link');
-      link.id = id;
-      link.rel = 'stylesheet';
-      link.href = new URL('./Layout.css', import.meta.url).href;
-      document.head.appendChild(link);
-    }
-  },
   template: /* html */ `
     <div class="layout">
       <nav-bar :items-map="menuMap"></nav-bar>
@@ -96,4 +74,4 @@ const menuRoutes = new Map([
 ]);
 
 export { AppLayout as A, menuRoutes as m };
-//# sourceMappingURL=menuRoutes-CECZZ7AQ.js.map
+//# sourceMappingURL=menuRoutes-CVCOp5YY.js.map

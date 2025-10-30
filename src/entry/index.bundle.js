@@ -1,2 +1,2 @@
-import '@/styles/global.css';
+import '@/styles/all.css';
 import './index.js';
