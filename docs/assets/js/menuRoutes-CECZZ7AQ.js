@@ -96,4 +96,4 @@ const menuRoutes = new Map([
 ]);
 
 export { AppLayout as A, menuRoutes as m };
-//# sourceMappingURL=menuRoutes-DPJDoBzT.js.map
+//# sourceMappingURL=menuRoutes-CECZZ7AQ.js.map

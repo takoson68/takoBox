@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile, cp, readdir, stat } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, cp, readdir, stat, rename } from 'node:fs/promises';
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -12,6 +12,14 @@ const cssDir = resolve(assetsDir, 'css');
 await mkdir(jsDir, { recursive: true });
 await mkdir(cssDir, { recursive: true });
 
+// Move CSS bundle extracted by Rollup (if present)
+const bundledCssInJs = resolve(jsDir, 'bundle.css');
+try {
+  await rename(bundledCssInJs, resolve(cssDir, 'bundle.css'));
+} catch (err) {
+  if (err.code !== 'ENOENT') throw err;
+}
+
 // Copy static assets (e.g. images) from public/assets to docs/assets
 const publicAssetsDir = resolve(rootDir, 'public', 'assets');
 try {
@@ -21,12 +29,6 @@ try {
     throw err;
   }
 }
-
-// Copy global stylesheet into docs bundle
-const globalCssSrc = resolve(rootDir, 'src', 'styles', 'global.css');
-const globalCssDest = resolve(cssDir, 'global.css');
-const cssContent = await readFile(globalCssSrc, 'utf8');
-await writeFile(globalCssDest, cssContent);
 
 // Copy component-scoped CSS next to bundled JS (lazy-loaded via import.meta.url)
 async function collectCssFiles(dir) {
@@ -61,7 +63,7 @@ for (const file of htmlFiles) {
 
   html = html
     .replace(importMapRegex, '')
-    .replace('./src/styles/global.css', './assets/css/global.css')
+    .replace('./src/styles/global.css', './assets/css/bundle.css')
     .replace(`./src/entry/${file === 'index.html' ? 'index' : 'about'}.js`, `./assets/js/${file === 'index.html' ? 'index' : 'about'}.js`);
 
   await writeFile(destPath, html);

@@ -1,4 +1,4 @@
-import { A as AppLayout, m as menuRoutes } from './menuRoutes-DPJDoBzT.js';
+import { A as AppLayout, m as menuRoutes } from './menuRoutes-CECZZ7AQ.js';
 
 const { createApp, ref } = Vue;
 

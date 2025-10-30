@@ -3,14 +3,15 @@ import { fileURLToPath } from 'node:url';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
+import postcss from 'rollup-plugin-postcss';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = __dirname;
 
 export default {
   input: {
-    index: resolve(rootDir, 'src', 'entry', 'index.js'),
-    about: resolve(rootDir, 'src', 'entry', 'about.js'),
+    index: resolve(rootDir, 'src', 'entry', 'index.bundle.js'),
+    about: resolve(rootDir, 'src', 'entry', 'about.bundle.js'),
   },
   output: {
     dir: resolve(rootDir, 'docs', 'assets', 'js'),
@@ -29,6 +30,10 @@ export default {
     }),
     nodeResolve(),
     commonjs(),
+    postcss({
+      extract: 'bundle.css',
+      minimize: true,
+    }),
   ],
   treeshake: true,
 };
