@@ -1,0 +1,14 @@
+{
+  "name": "tako-box",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/prebuild.mjs && rollup -c && node scripts/postbuild.mjs"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.12.0"
+  }
+}

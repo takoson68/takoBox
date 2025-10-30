@@ -1,10 +1,12 @@
 /* Layout component styles */
 /* Keep content below fixed navbar */
-body { padding-top: 56px; }
+body {
+  padding-top: 56px;
+  background-color: rgb(236, 230, 222);
+}
 
 .container {
   display: grid;
   place-items: center;
   min-height: 100vh;
 }
-
