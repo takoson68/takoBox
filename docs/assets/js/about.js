@@ -1,39 +1,15 @@
-import { A as AppLayout, m as menuRoutes } from './menuRoutes-CVCOp5YY.js';
+import { c as createAppShell, u as useStore } from './bootstrap-DwNrM3Q1.js';
 
-const { reactive, readonly, inject } = Vue;
+const { computed } = Vue;
 
-const StoreSymbol = Symbol('AppStore');
-
-const state = reactive({
-  token: 'fake-token-demo-123',
-});
-
-function installStore(app) {
-  app.provide(StoreSymbol, readonly(state));
-}
-
-function useStore() {
-  const store = inject(StoreSymbol);
-  if (!store) {
-    throw new Error('AppStore is not provided');
-  }
-  return store;
-}
-
-const { createApp, computed } = Vue;
-
-const app = createApp({
-  components: { AppLayout },
+const app = createAppShell(Vue, {
   setup() {
-    const store = useStore();
+    const tokenStore = useStore('tokenStore');
     return {
-      menuMap: menuRoutes,
-      token: computed(() => store.token),
+      token: computed(() => tokenStore.get()),
     };
   },
 });
-
-installStore(app);
 
 app.mount('#app');
 //# sourceMappingURL=about.js.map

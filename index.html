@@ -6,15 +6,18 @@
     <title>Vue 3 CDN Starter</title>
 
     <script type="importmap">
-      {
-        "imports": {
-          "@": "./src/",
-          "views/": "./src/views/",
-          "controllers/": "./src/controllers/",
-          "stores/": "./src/stores/"
-        }
-      }
-    </script>
+  {
+    "imports": {
+      "@": "./src/",
+      "@/": "./src/",
+      "views/": "./src/views/",
+      "controllers/": "./src/controllers/",
+      "stores/": "./src/stores/",
+      "api/": "./src/api/",
+      "services/": "./src/services/"
+    }
+  }
+</script>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
     <link rel="stylesheet" href="./src/styles/all.css" />
@@ -28,6 +31,9 @@
           <h1>Vue 3 + CDN</h1>
           <p>Count: {{ count }}</p>
           <button @click="count++">Increment</button>
+          <p v-if="menuLoading">菜單載入中...</p>
+          <p v-else-if="menuError">菜單錯誤：{{ menuError }}</p>
+          <p v-else>菜單：{{ menuLabels }}</p>
         </div>
       </app-layout>
     </div>

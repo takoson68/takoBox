@@ -17,6 +17,9 @@
           <h1>Vue 3 + CDN</h1>
           <p>Count: {{ count }}</p>
           <button @click="count++">Increment</button>
+          <p v-if="menuLoading">菜單載入中...</p>
+          <p v-else-if="menuError">菜單錯誤：{{ menuError }}</p>
+          <p v-else>菜單：{{ menuLabels }}</p>
         </div>
       </app-layout>
     </div>

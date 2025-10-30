@@ -1,12 +1,13 @@
-import { A as AppLayout, m as menuRoutes } from './menuRoutes-CVCOp5YY.js';
+import { c as createAppShell } from './bootstrap-DwNrM3Q1.js';
 
-const { createApp, ref } = Vue;
+const { ref } = Vue;
 
-createApp({
-  components: { AppLayout },
+const app = createAppShell(Vue, {
   setup() {
     const count = ref(0);
-    return { count, menuMap: menuRoutes };
+    return { count };
   },
-}).mount('#app');
+});
+
+app.mount('#app');
 //# sourceMappingURL=index.js.map

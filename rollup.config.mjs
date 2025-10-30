@@ -27,6 +27,8 @@ export default {
         { find: /^views\//, replacement: resolve(rootDir, 'src', 'views') + '/' },
         { find: /^controllers\//, replacement: resolve(rootDir, 'src', 'controllers') + '/' },
         { find: /^stores\//, replacement: resolve(rootDir, 'src', 'stores') + '/' },
+        { find: /^services\//, replacement: resolve(rootDir, 'src', 'services') + '/' },
+        { find: /^api\//, replacement: resolve(rootDir, 'src', 'api') + '/' },
       ],
     }),
     nodeResolve(),

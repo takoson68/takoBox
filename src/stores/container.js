@@ -1,19 +1,52 @@
-const { reactive, readonly, inject } = Vue;
+const { inject } = Vue;
 
-const StoreSymbol = Symbol('AppStore');
+const ContainerSymbol = Symbol('AppContainer');
 
-const state = reactive({
-  token: 'fake-token-demo-123',
-});
+class AppContainer {
+  #registry = new Map();
 
-export function installStore(app) {
-  app.provide(StoreSymbol, readonly(state));
-}
-
-export function useStore() {
-  const store = inject(StoreSymbol);
-  if (!store) {
-    throw new Error('AppStore is not provided');
+  register(name, service) {
+    if (!name) throw new Error('Container.register 需要 name');
+    if (!service) throw new Error(`Container.register(${name}) 缺少 service`);
+    if (!this.#registry.has(name)) {
+      this.#registry.set(name, service);
+    }
+    return this.#registry.get(name);
   }
-  return store;
+
+  resolve(name) {
+    if (!this.#registry.has(name)) {
+      throw new Error(`容器中沒有 "${name}"，請先註冊`);
+    }
+    return this.#registry.get(name);
+  }
+
+  has(name) {
+    return this.#registry.has(name);
+  }
+
+  unregister(name) {
+    this.#registry.delete(name);
+  }
 }
+
+const container = new AppContainer();
+
+export function installContainer(app) {
+  app.provide(ContainerSymbol, container);
+}
+
+export function useContainer() {
+  return inject(ContainerSymbol, container);
+}
+
+export function useStore(name) {
+  const c = useContainer();
+  return c.resolve(name);
+}
+
+export function resolveStore(name) {
+  return container.resolve(name);
+}
+
+export default container;

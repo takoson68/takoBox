@@ -1,19 +1,15 @@
-const { createApp, computed } = Vue;
-import AppLayout from 'views/layout/Layout.js';
-import menuMap from 'controllers/menuRoutes.js';
-import { installStore, useStore } from 'stores/container.js';
+import { createAppShell } from '@/app/bootstrap.js';
+import { useStore } from '@/stores/container.js';
 
-const app = createApp({
-  components: { AppLayout },
+const { computed } = Vue;
+
+const app = createAppShell(Vue, {
   setup() {
-    const store = useStore();
+    const tokenStore = useStore('tokenStore');
     return {
-      menuMap,
-      token: computed(() => store.token),
+      token: computed(() => tokenStore.get()),
     };
   },
 });
-
-installStore(app);
 
 app.mount('#app');

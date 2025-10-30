@@ -1,11 +1,12 @@
-const { createApp, ref } = Vue;
-import AppLayout from 'views/layout/Layout.js';
-import menuMap from 'controllers/menuRoutes.js';
+import { createAppShell } from '@/app/bootstrap.js';
 
-createApp({
-  components: { AppLayout },
+const { ref } = Vue;
+
+const app = createAppShell(Vue, {
   setup() {
     const count = ref(0);
-    return { count, menuMap };
+    return { count };
   },
-}).mount('#app');
+});
+
+app.mount('#app');
