@@ -1,6 +1,6 @@
 import { h, render } from 'https://esm.sh/preact@10.19.2';
 import { useState } from 'https://esm.sh/preact@10.19.2/hooks';
-import htm from 'https://esm.sh/htm@3.1.1/preact';
+import htm from 'https://esm.sh/htm@3.1.1';
 
 const html = htm.bind(h);
 
@@ -23,4 +23,3 @@ function App() {
 
 const container = document.getElementById('app');
 render(html`<${App} />`, container);
-
