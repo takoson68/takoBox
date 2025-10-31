@@ -1,38 +1,44 @@
-<!doctype html>
-<html lang="zh-Hant">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>About - Vue 3 CDN Starter</title>
-
-    <script type="importmap">
-  {
-    "imports": {
-      "@": "./src/",
-      "@/": "./src/",
-      "views/": "./src/views/",
-      "controllers/": "./src/controllers/",
-      "stores/": "./src/stores/",
-      "api/": "./src/api/",
-      "services/": "./src/services/"
-    }
-  }
-</script>
-
-    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
-    <link rel="stylesheet" href="./src/styles/all.css" />
-
-    <script type="module" src="./src/entry/about.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="about頁面描述"/>
+    <title>about</title>
+    <link rel="stylesheet" href="./css/main.css"/>
+    <link rel="stylesheet" href="./css/components.css"/>
+    <link rel="stylesheet" href="./css/vueComponents.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
   </head>
-  <body>
-    <div id="app" v-cloak>
-      <app-layout :menu-map="menuMap" v-cloak>
-        <div class="card">
-          <h1>關於 About</h1>
-          <p class="lead">這是一個使用共用 Layout 的示範頁面。</p>
-          <p>練習 Token：{{ token }}</p>
-        </div>
-      </app-layout>
+  <body data-page="about">
+    <div id="app" v-cloak="v-cloak">
+      <footer class="layout-footer">
+        <p>版權所有 &copy; 2025</p>
+      </footer>
     </div>
   </body>
+  <script src="./vendors/mock/mock.min.js"> </script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@/containers/": "./containers/",
+        "@/mock/": "./mock/",
+        "@/api/": "./api/",
+        "@Vue": "./VueContext.js",
+        "@/": "./",
+        "@/src": "./src/",
+        "@/utils/": "./containers/utils/",
+        "@/framework/": "./containers/framework/",
+        "@/pages/": "./src/pages/",
+        "@/plugins/": "./src/plugins/",
+        "@/layouts/": "./src/layouts/",
+        "@/components/": "./src/components/",
+        "@/vendors/": "./vendors/"
+      }
+    }
+    
+  </script>
+  <script type="module" src="./main.js"></script>
 </html>
