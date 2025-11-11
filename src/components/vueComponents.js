@@ -1,9 +1,297 @@
+import { resolveComponent, createElementBlock, openBlock, createElementVNode, createVNode, normalizeClass, createBlock, createCommentVNode, renderSlot, createTextVNode, toDisplayString, withDirectives, Fragment, renderList, vModelSelect, normalizeStyle, vShow, vModelText, resolveDirective, withCtx, withModifiers, vModelCheckbox, vModelDynamic, withKeys } from '@Vue';
 import { container } from '@/containers/index-dist.js';
-import { createElementBlock, openBlock, createElementVNode, toDisplayString, Fragment, renderList, normalizeClass, createCommentVNode, renderSlot, resolveComponent, createVNode, createBlock, createTextVNode, withDirectives, vShow, vModelText, resolveDirective, withCtx, withModifiers, vModelCheckbox, vModelDynamic, vModelSelect, normalizeStyle, withKeys } from '@Vue';
 import { api } from '@/api/index-dist.js';
 import { ref, onMounted, nextTick } from '@Vue';
 
 var script$f = {
+  name: "DefaultLayout",
+  props: {
+    indexPage: { type: String, required: false, default: "" },
+    showMenu: { type: Boolean, required: false, default: true },
+    testBox: { type: String, required: false }
+  }
+};
+
+const _hoisted_1$f = { class: "layout-container" };
+const _hoisted_2$c = { class: "layout-header" };
+const _hoisted_3$b = { class: "containerBox" };
+const _hoisted_4$9 = { class: "layout-footer" };
+const _hoisted_5$6 = { key: 0 };
+function render$f(_ctx, _cache, $props, $setup, $data, $options) {
+  const _component_menuComponent = resolveComponent("menuComponent");
+  const _component_listComponent = resolveComponent("listComponent");
+  return openBlock(), createElementBlock("div", _hoisted_1$f, [
+    createElementVNode("header", _hoisted_2$c, [
+      createVNode(_component_menuComponent)
+    ]),
+    createElementVNode(
+      "main",
+      {
+        class: normalizeClass("layout-main " + $props.indexPage)
+      },
+      [
+        createElementVNode("div", _hoisted_3$b, [
+          $props.showMenu ? (openBlock(), createBlock(_component_listComponent, { key: 0 })) : createCommentVNode("v-if", true),
+          createCommentVNode(" \u5DE6\u5074 slot\uFF08\u4F8B\u5982\u884C\u4E8B\u66C6\u5340\u584A\uFF09"),
+          renderSlot(_ctx.$slots, "coverNoMemu"),
+          createCommentVNode(" \u4E3B\u8981\u5167\u5BB9 slot"),
+          renderSlot(_ctx.$slots, "conApp")
+        ])
+      ],
+      2
+      /* CLASS */
+    ),
+    createElementVNode("footer", _hoisted_4$9, [
+      createElementVNode("p", null, [
+        _cache[0] || (_cache[0] = createTextVNode(
+          "\xA9 2025 My Website",
+          -1
+          /* CACHED */
+        )),
+        !!$props.testBox ? (openBlock(), createElementBlock(
+          "b",
+          _hoisted_5$6,
+          toDisplayString(" " + $props.testBox),
+          1
+          /* TEXT */
+        )) : createCommentVNode("v-if", true)
+      ])
+    ])
+  ]);
+}
+
+script$f.render = render$f;
+script$f.__scopeId = "data-v-f3fa2e32";
+script$f.__file = "src/components/DefaultLayout/DefaultLayout.vue";
+
+var script$e = {
+  name: "PaginationComponent",
+  props: {
+    items: { type: [Array, Object], required: true, default: () => [] },
+    pageSizeOptions: { type: Array, default: () => [5, 10, 20, 30], validator: (val) => val.every((n) => typeof n === "number") },
+    columns: { type: Array, default: () => [] },
+    showset: { type: Boolean, default: false }
+  },
+  data() {
+    return {
+      currentPage: 1,
+      pageSize: 5,
+      modalTitle: "",
+      modalData: null,
+      editableFields: [["id", "\u5E33\u865F"], ["name", "\u66B1\u7A31"], ["age", "\u5E74\u9F61"], ["email", "\u806F\u7D61\u4FE1\u7BB1"]],
+      dataFlex: [["id", "\u5E33\u865F", 3], ["name", "\u66B1\u7A31", 5], ["age", "\u5E74\u9F61", 1], ["email", "\u806F\u7D61\u4FE1\u7BB1", 6], ["date", "\u65E5\u671F", 3]]
+    };
+  },
+  computed: {
+    normalizedItems() {
+      if (Array.isArray(this.items)) return this.items;
+      if (this.items && typeof this.items === "object") return Object.values(this.items);
+      return [];
+    },
+    totalPages() {
+      return Math.ceil(this.normalizedItems.length / this.pageSize);
+    },
+    paginatedItems() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      return this.normalizedItems.slice(start, start + this.pageSize);
+    },
+    displayColumns() {
+      if (this.columns.length > 0) return this.columns;
+      const first = this.paginatedItems[0];
+      return first ? Object.keys(first) : [];
+    },
+    fieldDisplayMap() {
+      const map = {};
+      this.dataFlex.forEach(([key, label, flex = 1]) => {
+        map[key] = { label, flex };
+      });
+      return map;
+    }
+  },
+  methods: {
+    changePage(p) {
+      this.currentPage = p;
+    },
+    changeSize(s) {
+      this.pageSize = s;
+      this.currentPage = 1;
+    },
+    showModal(title, data) {
+      this.modalTitle = title;
+      this.modalData = data;
+    },
+    closeModal() {
+      this.modalData = null;
+    },
+    saveData(updated) {
+      const idx = this.items.findIndex((u) => u.id === updated.id);
+      if (idx !== -1) {
+        this.items[idx] = { ...updated };
+      }
+      this.closeModal();
+    }
+  }
+};
+
+const _hoisted_1$e = { class: "pagination-wrapper" };
+const _hoisted_2$b = { class: "controls" };
+const _hoisted_3$a = ["value"];
+const _hoisted_4$8 = { class: "userBox" };
+const _hoisted_5$5 = { class: "nbr" };
+const _hoisted_6$4 = ["onClick"];
+const _hoisted_7$2 = { class: "pagination" };
+const _hoisted_8$1 = ["disabled"];
+const _hoisted_9$1 = ["disabled"];
+function render$e(_ctx, _cache, $props, $setup, $data, $options) {
+  const _component_modalComponent = resolveComponent("modalComponent");
+  return openBlock(), createElementBlock("div", _hoisted_1$e, [
+    createElementVNode("div", _hoisted_2$b, [
+      createElementVNode("label", null, [
+        _cache[4] || (_cache[4] = createTextVNode(
+          "\u6BCF\u9801\u986F\u793A\uFF1A",
+          -1
+          /* CACHED */
+        )),
+        withDirectives(createElementVNode(
+          "select",
+          {
+            "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.pageSize = $event),
+            onChange: _cache[1] || (_cache[1] = ($event) => $options.changeSize($data.pageSize))
+          },
+          [
+            (openBlock(true), createElementBlock(
+              Fragment,
+              null,
+              renderList($props.pageSizeOptions, (option) => {
+                return openBlock(), createElementBlock("option", {
+                  key: option,
+                  value: option
+                }, toDisplayString(option), 9, _hoisted_3$a);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ],
+          544
+          /* NEED_HYDRATION, NEED_PATCH */
+        ), [
+          [
+            vModelSelect,
+            $data.pageSize,
+            void 0,
+            { number: true }
+          ]
+        ])
+      ])
+    ]),
+    createElementVNode("ul", _hoisted_4$8, [
+      (openBlock(true), createElementBlock(
+        Fragment,
+        null,
+        renderList($options.paginatedItems, (user, ind) => {
+          return openBlock(), createElementBlock("li", {
+            key: user.id || ind
+          }, [
+            createElementVNode("div", null, [
+              createElementVNode(
+                "b",
+                _hoisted_5$5,
+                toDisplayString(ind + 1),
+                1
+                /* TEXT */
+              ),
+              (openBlock(true), createElementBlock(
+                Fragment,
+                null,
+                renderList($options.displayColumns, (field) => {
+                  return openBlock(), createElementBlock(
+                    "span",
+                    {
+                      style: normalizeStyle({ flex: $options.fieldDisplayMap[field]?.flex || 1 }),
+                      key: field
+                    },
+                    toDisplayString(user[field] ?? "\u7121\u8CC7\u6599"),
+                    5
+                    /* TEXT, STYLE */
+                  );
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              )),
+              $props.showset && user.age !== "\u7121\u8CC7\u6599" ? (openBlock(), createElementBlock("b", {
+                key: 0,
+                class: "showsetBtn",
+                onClick: ($event) => $options.showModal("\u4FEE\u6539\u7528\u6236\u8CC7\u8A0A", user),
+                title: "\u4FEE\u6539"
+              }, [..._cache[5] || (_cache[5] = [
+                createElementVNode(
+                  "i",
+                  { class: "fa fa-cog" },
+                  null,
+                  -1
+                  /* CACHED */
+                )
+              ])], 8, _hoisted_6$4)) : createCommentVNode("v-if", true)
+            ])
+          ]);
+        }),
+        128
+        /* KEYED_FRAGMENT */
+      )),
+      (openBlock(true), createElementBlock(
+        Fragment,
+        null,
+        renderList($data.pageSize - $options.paginatedItems.length, (n) => {
+          return openBlock(), createElementBlock("li", {
+            class: "blank-row",
+            key: "blank-" + n
+          }, [..._cache[6] || (_cache[6] = [
+            createElementVNode(
+              "div",
+              null,
+              null,
+              -1
+              /* CACHED */
+            )
+          ])]);
+        }),
+        128
+        /* KEYED_FRAGMENT */
+      ))
+    ]),
+    createElementVNode("div", _hoisted_7$2, [
+      createElementVNode("button", {
+        disabled: $data.currentPage === 1,
+        onClick: _cache[2] || (_cache[2] = ($event) => $options.changePage($data.currentPage - 1))
+      }, "\u4E0A\u4E00\u9801", 8, _hoisted_8$1),
+      createElementVNode(
+        "span",
+        null,
+        "\u7B2C" + toDisplayString($data.currentPage) + " / " + toDisplayString($options.totalPages) + " \u9801",
+        1
+        /* TEXT */
+      ),
+      createElementVNode("button", {
+        disabled: $data.currentPage === $options.totalPages,
+        onClick: _cache[3] || (_cache[3] = ($event) => $options.changePage($data.currentPage + 1))
+      }, "\u4E0B\u4E00\u9801", 8, _hoisted_9$1)
+    ]),
+    $data.modalData ? (openBlock(), createBlock(_component_modalComponent, {
+      key: 0,
+      title: $data.modalTitle,
+      data: $data.modalData,
+      "editable-fields": $data.editableFields,
+      onClose: $options.closeModal,
+      onSave: $options.saveData
+    }, null, 8, ["title", "data", "editable-fields", "onClose", "onSave"])) : createCommentVNode("v-if", true)
+  ]);
+}
+
+script$e.render = render$e;
+script$e.__scopeId = "data-v-fa0c1152";
+script$e.__file = "src/components/PaginationComponent/PaginationComponent.vue";
+
+var script$d = {
   name: "calendarComponent",
   props: { indexMonth: { type: [Array, String], default: () => [] } },
   data() {
@@ -116,15 +404,15 @@ var script$f = {
   }
 };
 
-const _hoisted_1$f = { class: "calendarTemp" };
-const _hoisted_2$c = { class: "calendar-header" };
-const _hoisted_3$b = { class: "calendar-body" };
-const _hoisted_4$9 = { class: "calendar-week" };
-const _hoisted_5$6 = { class: "calendar-dates" };
-const _hoisted_6$4 = ["onClick"];
-function render$f(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("div", _hoisted_1$f, [
-    createElementVNode("div", _hoisted_2$c, [
+const _hoisted_1$d = { class: "calendarTemp" };
+const _hoisted_2$a = { class: "calendar-header" };
+const _hoisted_3$9 = { class: "calendar-body" };
+const _hoisted_4$7 = { class: "calendar-week" };
+const _hoisted_5$4 = { class: "calendar-dates" };
+const _hoisted_6$3 = ["onClick"];
+function render$d(_ctx, _cache, $props, $setup, $data, $options) {
+  return openBlock(), createElementBlock("div", _hoisted_1$d, [
+    createElementVNode("div", _hoisted_2$a, [
       createElementVNode("button", {
         class: "prev",
         onClick: _cache[0] || (_cache[0] = (...args) => $options.prevMonth && $options.prevMonth(...args))
@@ -141,8 +429,8 @@ function render$f(_ctx, _cache, $props, $setup, $data, $options) {
         onClick: _cache[1] || (_cache[1] = (...args) => $options.nextMonth && $options.nextMonth(...args))
       }, "\u4E0B\u500B\u6708")
     ]),
-    createElementVNode("div", _hoisted_3$b, [
-      createElementVNode("div", _hoisted_4$9, [
+    createElementVNode("div", _hoisted_3$9, [
+      createElementVNode("div", _hoisted_4$7, [
         (openBlock(true), createElementBlock(
           Fragment,
           null,
@@ -159,7 +447,7 @@ function render$f(_ctx, _cache, $props, $setup, $data, $options) {
           /* KEYED_FRAGMENT */
         ))
       ]),
-      createElementVNode("div", _hoisted_5$6, [
+      createElementVNode("div", _hoisted_5$4, [
         (openBlock(true), createElementBlock(
           Fragment,
           null,
@@ -168,7 +456,7 @@ function render$f(_ctx, _cache, $props, $setup, $data, $options) {
               class: normalizeClass(["calendar-date", $options.getDateClass(day)]),
               key: day.dateIndex,
               onClick: ($event) => $options.handleDateClick(day)
-            }, toDisplayString(day.date || ""), 11, _hoisted_6$4);
+            }, toDisplayString(day.date || ""), 11, _hoisted_6$3);
           }),
           128
           /* KEYED_FRAGMENT */
@@ -178,21 +466,21 @@ function render$f(_ctx, _cache, $props, $setup, $data, $options) {
   ]);
 }
 
-script$f.render = render$f;
-script$f.__scopeId = "data-v-46a5974f";
-script$f.__file = "src/components/calendarComponent/calendarComponent.vue";
+script$d.render = render$d;
+script$d.__scopeId = "data-v-46a5974f";
+script$d.__file = "src/components/calendarComponent/calendarComponent.vue";
 
 const tempStore$2 = container.resolve("tempStore");
-var script$e = {
+var script$c = {
   name: "componentTemplate",
   data() {
     return { myTest: tempStore$2.get().myTest || {} };
   }
 };
 
-const _hoisted_1$e = { class: "component-template" };
-function render$e(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("div", _hoisted_1$e, [
+const _hoisted_1$c = { class: "component-template" };
+function render$c(_ctx, _cache, $props, $setup, $data, $options) {
+  return openBlock(), createElementBlock("div", _hoisted_1$c, [
     createElementVNode(
       "h2",
       null,
@@ -217,11 +505,11 @@ function render$e(_ctx, _cache, $props, $setup, $data, $options) {
   ]);
 }
 
-script$e.render = render$e;
-script$e.__scopeId = "data-v-0a66f3bf";
-script$e.__file = "src/components/componentTemplate/componentTemplate.vue";
+script$c.render = render$c;
+script$c.__scopeId = "data-v-0a66f3bf";
+script$c.__file = "src/components/componentTemplate/componentTemplate.vue";
 
-var script$d = {
+var script$b = {
   name: "coverComponent",
   props: ["title"],
   methods: {
@@ -231,21 +519,21 @@ var script$d = {
   }
 };
 
-const _hoisted_1$d = { class: "modal-overlay" };
-const _hoisted_2$b = { class: "modal" };
-const _hoisted_3$a = { key: 0 };
-const _hoisted_4$8 = { class: "modal-content" };
-function render$d(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("div", _hoisted_1$d, [
-    createElementVNode("div", _hoisted_2$b, [
+const _hoisted_1$b = { class: "modal-overlay" };
+const _hoisted_2$9 = { class: "modal" };
+const _hoisted_3$8 = { key: 0 };
+const _hoisted_4$6 = { class: "modal-content" };
+function render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  return openBlock(), createElementBlock("div", _hoisted_1$b, [
+    createElementVNode("div", _hoisted_2$9, [
       $props.title ? (openBlock(), createElementBlock(
         "h2",
-        _hoisted_3$a,
+        _hoisted_3$8,
         toDisplayString($props.title),
         1
         /* TEXT */
       )) : createCommentVNode("v-if", true),
-      createElementVNode("div", _hoisted_4$8, [
+      createElementVNode("div", _hoisted_4$6, [
         renderSlot(_ctx.$slots, "default")
       ]),
       createElementVNode("span", {
@@ -261,151 +549,9 @@ function render$d(_ctx, _cache, $props, $setup, $data, $options) {
   ]);
 }
 
-script$d.render = render$d;
-script$d.__scopeId = "data-v-3c6e59cf";
-script$d.__file = "src/components/coverComponent/coverComponent.vue";
-
-var script$c = {
-  name: "DefaultLayout",
-  props: {
-    indexPage: { type: String, required: false, default: "" },
-    showMenu: { type: Boolean, required: false, default: true },
-    testBox: { type: String, required: false }
-  }
-};
-
-const _hoisted_1$c = { class: "layout-container" };
-const _hoisted_2$a = { class: "layout-header" };
-const _hoisted_3$9 = { class: "containerBox" };
-const _hoisted_4$7 = { class: "layout-footer" };
-const _hoisted_5$5 = { key: 0 };
-function render$c(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_menuComponent = resolveComponent("menuComponent");
-  const _component_listComponent = resolveComponent("listComponent");
-  return openBlock(), createElementBlock("div", _hoisted_1$c, [
-    createElementVNode("header", _hoisted_2$a, [
-      createVNode(_component_menuComponent)
-    ]),
-    createElementVNode(
-      "main",
-      {
-        class: normalizeClass("layout-main " + $props.indexPage)
-      },
-      [
-        createElementVNode("div", _hoisted_3$9, [
-          $props.showMenu ? (openBlock(), createBlock(_component_listComponent, { key: 0 })) : createCommentVNode("v-if", true),
-          createCommentVNode(" \u5DE6\u5074 slot\uFF08\u4F8B\u5982\u884C\u4E8B\u66C6\u5340\u584A\uFF09"),
-          renderSlot(_ctx.$slots, "coverNoMemu"),
-          createCommentVNode(" \u4E3B\u8981\u5167\u5BB9 slot"),
-          renderSlot(_ctx.$slots, "conApp")
-        ])
-      ],
-      2
-      /* CLASS */
-    ),
-    createElementVNode("footer", _hoisted_4$7, [
-      createElementVNode("p", null, [
-        _cache[0] || (_cache[0] = createTextVNode(
-          "\xA9 2025 My Website",
-          -1
-          /* CACHED */
-        )),
-        !!$props.testBox ? (openBlock(), createElementBlock(
-          "b",
-          _hoisted_5$5,
-          toDisplayString(" " + $props.testBox),
-          1
-          /* TEXT */
-        )) : createCommentVNode("v-if", true)
-      ])
-    ])
-  ]);
-}
-
-script$c.render = render$c;
-script$c.__scopeId = "data-v-f3fa2e32";
-script$c.__file = "src/components/DefaultLayout/DefaultLayout.vue";
-
-const menuStore$1 = container.resolve("menuStore");
-var script$b = {
-  name: "listComponent",
-  data() {
-    return { routes: menuStore$1.get() };
-  },
-  created() {
-    if (!this.routes) {
-      api.get("/api/menu").then((res) => {
-        const menu = res.data;
-        menuStore$1.set(menu);
-        this.routes = menu;
-      });
-    }
-  }
-};
-
-const _hoisted_1$b = { class: "listMenu" };
-const _hoisted_2$9 = ["href", "data-lang"];
-const _hoisted_3$8 = ["id", "data-lang"];
-const _hoisted_4$6 = { key: 2 };
-const _hoisted_5$4 = ["href", "data-lang"];
-const _hoisted_6$3 = ["id", "data-lang"];
-function render$b(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("nav", _hoisted_1$b, [
-    createElementVNode("ul", null, [
-      (openBlock(true), createElementBlock(
-        Fragment,
-        null,
-        renderList($data.routes, (route) => {
-          return openBlock(), createElementBlock("li", {
-            key: route.path
-          }, [
-            createCommentVNode(" \u4F7F\u7528\u6210\u5C0D v-if\uFF0C\u907F\u514D v-else \u89E3\u6790\u554F\u984C"),
-            route.path !== "" ? (openBlock(), createElementBlock("a", {
-              key: 0,
-              href: route.path,
-              "data-lang": route.meta.lang
-            }, toDisplayString(route.meta.title), 9, _hoisted_2$9)) : createCommentVNode("v-if", true),
-            route.path === "" ? (openBlock(), createElementBlock("a", {
-              key: 1,
-              id: "i18n-" + route.component,
-              "data-lang": route.meta.lang
-            }, toDisplayString(route.meta.title), 9, _hoisted_3$8)) : createCommentVNode("v-if", true),
-            route.children && route.children.length > 0 ? (openBlock(), createElementBlock("ul", _hoisted_4$6, [
-              (openBlock(true), createElementBlock(
-                Fragment,
-                null,
-                renderList(route.children, (child) => {
-                  return openBlock(), createElementBlock("li", {
-                    key: child.path || child.component
-                  }, [
-                    child.path !== "" ? (openBlock(), createElementBlock("a", {
-                      key: 0,
-                      href: child.path,
-                      "data-lang": child.meta.lang
-                    }, toDisplayString(child.meta.title), 9, _hoisted_5$4)) : createCommentVNode("v-if", true),
-                    child.path === "" ? (openBlock(), createElementBlock("a", {
-                      key: 1,
-                      id: "i18n-" + route.component,
-                      "data-lang": child.meta.lang
-                    }, toDisplayString(child.meta.title), 9, _hoisted_6$3)) : createCommentVNode("v-if", true)
-                  ]);
-                }),
-                128
-                /* KEYED_FRAGMENT */
-              ))
-            ])) : createCommentVNode("v-if", true)
-          ]);
-        }),
-        128
-        /* KEYED_FRAGMENT */
-      ))
-    ])
-  ]);
-}
-
 script$b.render = render$b;
-script$b.__scopeId = "data-v-b41a86e2";
-script$b.__file = "src/components/listComponent/listComponent.vue";
+script$b.__scopeId = "data-v-3c6e59cf";
+script$b.__file = "src/components/coverComponent/coverComponent.vue";
 
 var script$a = {
   name: "listUseStarTemp",
@@ -489,8 +635,89 @@ script$a.render = render$a;
 script$a.__scopeId = "data-v-5146716f";
 script$a.__file = "src/components/listUseStarTemp/listUseStarTemp.vue";
 
-const langStore$1 = container.resolve("languageStore");
+const menuStore$1 = container.resolve("menuStore");
 var script$9 = {
+  name: "listComponent",
+  data() {
+    return { routes: menuStore$1.get() };
+  },
+  created() {
+    if (!this.routes) {
+      api.get("/api/menu").then((res) => {
+        const menu = res.data;
+        menuStore$1.set(menu);
+        this.routes = menu;
+      });
+    }
+  }
+};
+
+const _hoisted_1$9 = { class: "listMenu" };
+const _hoisted_2$7 = ["href", "data-lang"];
+const _hoisted_3$6 = ["id", "data-lang"];
+const _hoisted_4$5 = { key: 2 };
+const _hoisted_5$3 = ["href", "data-lang"];
+const _hoisted_6$2 = ["id", "data-lang"];
+function render$9(_ctx, _cache, $props, $setup, $data, $options) {
+  return openBlock(), createElementBlock("nav", _hoisted_1$9, [
+    createElementVNode("ul", null, [
+      (openBlock(true), createElementBlock(
+        Fragment,
+        null,
+        renderList($data.routes, (route) => {
+          return openBlock(), createElementBlock("li", {
+            key: route.path
+          }, [
+            createCommentVNode(" \u4F7F\u7528\u6210\u5C0D v-if\uFF0C\u907F\u514D v-else \u89E3\u6790\u554F\u984C"),
+            route.path !== "" ? (openBlock(), createElementBlock("a", {
+              key: 0,
+              href: route.path,
+              "data-lang": route.meta.lang
+            }, toDisplayString(route.meta.title), 9, _hoisted_2$7)) : createCommentVNode("v-if", true),
+            route.path === "" ? (openBlock(), createElementBlock("a", {
+              key: 1,
+              id: "i18n-" + route.component,
+              "data-lang": route.meta.lang
+            }, toDisplayString(route.meta.title), 9, _hoisted_3$6)) : createCommentVNode("v-if", true),
+            route.children && route.children.length > 0 ? (openBlock(), createElementBlock("ul", _hoisted_4$5, [
+              (openBlock(true), createElementBlock(
+                Fragment,
+                null,
+                renderList(route.children, (child) => {
+                  return openBlock(), createElementBlock("li", {
+                    key: child.path || child.component
+                  }, [
+                    child.path !== "" ? (openBlock(), createElementBlock("a", {
+                      key: 0,
+                      href: child.path,
+                      "data-lang": child.meta.lang
+                    }, toDisplayString(child.meta.title), 9, _hoisted_5$3)) : createCommentVNode("v-if", true),
+                    child.path === "" ? (openBlock(), createElementBlock("a", {
+                      key: 1,
+                      id: "i18n-" + route.component,
+                      "data-lang": child.meta.lang
+                    }, toDisplayString(child.meta.title), 9, _hoisted_6$2)) : createCommentVNode("v-if", true)
+                  ]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])) : createCommentVNode("v-if", true)
+          ]);
+        }),
+        128
+        /* KEYED_FRAGMENT */
+      ))
+    ])
+  ]);
+}
+
+script$9.render = render$9;
+script$9.__scopeId = "data-v-b41a86e2";
+script$9.__file = "src/components/listComponent/listComponent.vue";
+
+const langStore$1 = container.resolve("languageStore");
+var script$8 = {
   name: "loginComponent",
   emits: ["submit", "cancel"],
   setup(_, { emit }) {
@@ -512,10 +739,10 @@ var script$9 = {
   }
 };
 
-const _hoisted_1$9 = { for: "username" };
-const _hoisted_2$7 = { for: "password" };
-const _hoisted_3$6 = { class: "btnBox" };
-function render$9(_ctx, _cache, $props, $setup, $data, $options) {
+const _hoisted_1$8 = { for: "username" };
+const _hoisted_2$6 = { for: "password" };
+const _hoisted_3$5 = { class: "btnBox" };
+function render$8(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock(
     "form",
     {
@@ -524,7 +751,7 @@ function render$9(_ctx, _cache, $props, $setup, $data, $options) {
       "aria-label": "\u767B\u5165\u8868\u55AE"
     },
     [
-      createElementVNode("label", _hoisted_1$9, [
+      createElementVNode("label", _hoisted_1$8, [
         _cache[4] || (_cache[4] = createElementVNode(
           "b",
           { "data-lang": "cont_lang_03" },
@@ -550,7 +777,7 @@ function render$9(_ctx, _cache, $props, $setup, $data, $options) {
           [vModelText, $setup.username]
         ])
       ]),
-      createElementVNode("label", _hoisted_2$7, [
+      createElementVNode("label", _hoisted_2$6, [
         _cache[5] || (_cache[5] = createElementVNode(
           "b",
           { "data-lang": "cont_lang_04" },
@@ -576,7 +803,7 @@ function render$9(_ctx, _cache, $props, $setup, $data, $options) {
           [vModelText, $setup.password]
         ])
       ]),
-      createElementVNode("div", _hoisted_3$6, [
+      createElementVNode("div", _hoisted_3$5, [
         createElementVNode("button", {
           type: "button",
           onClick: _cache[2] || (_cache[2] = (...args) => $setup.cancelLogin && $setup.cancelLogin(...args))
@@ -598,15 +825,15 @@ function render$9(_ctx, _cache, $props, $setup, $data, $options) {
   );
 }
 
-script$9.render = render$9;
-script$9.__scopeId = "data-v-5e5ecc0f";
-script$9.__file = "src/components/loginComponent/loginComponent.vue";
+script$8.render = render$8;
+script$8.__scopeId = "data-v-5e5ecc0f";
+script$8.__file = "src/components/loginComponent/loginComponent.vue";
 
 const menuStore = container.resolve("menuStore");
 const tokenStore = container.resolve("tokenStore");
 const langStore = container.resolve("languageStore");
 const permissionStore = container.resolve("permissionStore");
-var script$8 = {
+var script$7 = {
   name: "menuComponent",
   data() {
     return {
@@ -667,20 +894,20 @@ var script$8 = {
   }
 };
 
-const _hoisted_1$8 = { class: "topMenu" };
-const _hoisted_2$6 = ["href", "data-lang"];
-const _hoisted_3$5 = ["data-lang"];
-const _hoisted_4$5 = ["id"];
-const _hoisted_5$3 = ["href", "data-lang"];
-const _hoisted_6$2 = ["onClick", "id", "data-lang"];
-const _hoisted_7$2 = {
+const _hoisted_1$7 = { class: "topMenu" };
+const _hoisted_2$5 = ["href", "data-lang"];
+const _hoisted_3$4 = ["data-lang"];
+const _hoisted_4$4 = ["id"];
+const _hoisted_5$2 = ["href", "data-lang"];
+const _hoisted_6$1 = ["onClick", "id", "data-lang"];
+const _hoisted_7$1 = {
   key: 1,
   class: "bgGary"
 };
-function render$8(_ctx, _cache, $props, $setup, $data, $options) {
+function render$7(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_loginComponent = resolveComponent("loginComponent");
   const _directive_can = resolveDirective("can");
-  return openBlock(), createElementBlock("nav", _hoisted_1$8, [
+  return openBlock(), createElementBlock("nav", _hoisted_1$7, [
     createElementVNode("ul", null, [
       (openBlock(true), createElementBlock(
         Fragment,
@@ -697,11 +924,11 @@ function render$8(_ctx, _cache, $props, $setup, $data, $options) {
                 key: 0,
                 href: route.path,
                 "data-lang": route.meta.lang
-              }, null, 8, _hoisted_2$6)) : createCommentVNode("v-if", true),
+              }, null, 8, _hoisted_2$5)) : createCommentVNode("v-if", true),
               route.path === "" ? (openBlock(), createElementBlock("a", {
                 key: 1,
                 "data-lang": route.meta.lang
-              }, toDisplayString($data.langDD[route.meta.lang]), 9, _hoisted_3$5)) : createCommentVNode("v-if", true),
+              }, toDisplayString($data.langDD[route.meta.lang]), 9, _hoisted_3$4)) : createCommentVNode("v-if", true),
               route.children && route.children.length > 0 ? (openBlock(), createElementBlock("ul", {
                 key: 2,
                 id: "i18n-" + route.component
@@ -717,19 +944,19 @@ function render$8(_ctx, _cache, $props, $setup, $data, $options) {
                         key: 0,
                         href: child.path,
                         "data-lang": child.meta.lang
-                      }, toDisplayString($data.langDD[child.meta.lang]), 9, _hoisted_5$3)) : createCommentVNode("v-if", true),
+                      }, toDisplayString($data.langDD[child.meta.lang]), 9, _hoisted_5$2)) : createCommentVNode("v-if", true),
                       child.path === "" ? (openBlock(), createElementBlock("a", {
                         key: 1,
                         onClick: ($event) => $options.setLangDD(child.component),
                         id: "i18n-" + child.component,
                         "data-lang": child.meta.lang
-                      }, toDisplayString($data.langDD[child.meta.lang]), 9, _hoisted_6$2)) : createCommentVNode("v-if", true)
+                      }, toDisplayString($data.langDD[child.meta.lang]), 9, _hoisted_6$1)) : createCommentVNode("v-if", true)
                     ]);
                   }),
                   128
                   /* KEYED_FRAGMENT */
                 ))
-              ], 8, _hoisted_4$5)) : createCommentVNode("v-if", true)
+              ], 8, _hoisted_4$4)) : createCommentVNode("v-if", true)
             ],
             2
             /* CLASS */
@@ -776,7 +1003,7 @@ function render$8(_ctx, _cache, $props, $setup, $data, $options) {
         /* CACHED */
       )
     ])])) : createCommentVNode("v-if", true),
-    $data.showLogin ? (openBlock(), createElementBlock("div", _hoisted_7$2, [
+    $data.showLogin ? (openBlock(), createElementBlock("div", _hoisted_7$1, [
       createVNode(_component_loginComponent, {
         onSubmit: $options.handleLogin,
         onCancel: $options.cancelLogin
@@ -785,11 +1012,11 @@ function render$8(_ctx, _cache, $props, $setup, $data, $options) {
   ]);
 }
 
-script$8.render = render$8;
-script$8.__scopeId = "data-v-753cf7e6";
-script$8.__file = "src/components/menuComponent/menuComponent.vue";
+script$7.render = render$7;
+script$7.__scopeId = "data-v-753cf7e6";
+script$7.__file = "src/components/menuComponent/menuComponent.vue";
 
-var script$7 = {
+var script$6 = {
   name: "modalComponent",
   props: ["title", "data", "editableFields"],
   data() {
@@ -817,12 +1044,12 @@ var script$7 = {
   }
 };
 
-const _hoisted_1$7 = ["for"];
-const _hoisted_2$5 = ["id", "onUpdate:modelValue"];
-const _hoisted_3$4 = ["type", "id", "onUpdate:modelValue"];
-const _hoisted_4$4 = ["id", "onUpdate:modelValue"];
-const _hoisted_5$2 = { class: "actions" };
-function render$7(_ctx, _cache, $props, $setup, $data, $options) {
+const _hoisted_1$6 = ["for"];
+const _hoisted_2$4 = ["id", "onUpdate:modelValue"];
+const _hoisted_3$3 = ["type", "id", "onUpdate:modelValue"];
+const _hoisted_4$3 = ["id", "onUpdate:modelValue"];
+const _hoisted_5$1 = { class: "actions" };
+function render$6(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_coverComponent = resolveComponent("coverComponent");
   return openBlock(), createBlock(_component_coverComponent, {
     title: $props.title,
@@ -845,14 +1072,14 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
               }, [
                 createElementVNode("label", {
                   for: field[0]
-                }, toDisplayString(field[1]), 9, _hoisted_1$7),
+                }, toDisplayString(field[1]), 9, _hoisted_1$6),
                 createCommentVNode(" \u907F\u514D v-else \u89E3\u6790\u554F\u984C\uFF0C\u6539\u7528\u76F8\u5BB9\u7684 v-if \u5206\u652F"),
                 $options.isBooleanField($data.localData[field[0]]) ? withDirectives((openBlock(), createElementBlock("input", {
                   key: 0,
                   type: "checkbox",
                   id: field[0],
                   "onUpdate:modelValue": ($event) => $data.localData[field[0]] = $event
-                }, null, 8, _hoisted_2$5)), [
+                }, null, 8, _hoisted_2$4)), [
                   [vModelCheckbox, $data.localData[field[0]]]
                 ]) : createCommentVNode("v-if", true),
                 $options.isTextField($data.localData[field[0]]) && !$options.isBooleanField($data.localData[field[0]]) ? withDirectives((openBlock(), createElementBlock("input", {
@@ -860,7 +1087,7 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
                   type: $options.getInputType($data.localData[field[0]]),
                   id: field[0],
                   "onUpdate:modelValue": ($event) => $data.localData[field[0]] = $event
-                }, null, 8, _hoisted_3$4)), [
+                }, null, 8, _hoisted_3$3)), [
                   [vModelDynamic, $data.localData[field[0]]]
                 ]) : createCommentVNode("v-if", true),
                 !$options.isTextField($data.localData[field[0]]) && !$options.isBooleanField($data.localData[field[0]]) ? withDirectives((openBlock(), createElementBlock("input", {
@@ -868,7 +1095,7 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
                   type: "text",
                   id: field[0],
                   "onUpdate:modelValue": ($event) => $data.localData[field[0]] = $event
-                }, null, 8, _hoisted_4$4)), [
+                }, null, 8, _hoisted_4$3)), [
                   [vModelText, $data.localData[field[0]]]
                 ]) : createCommentVNode("v-if", true)
               ]);
@@ -876,7 +1103,7 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
             128
             /* KEYED_FRAGMENT */
           )),
-          createElementVNode("div", _hoisted_5$2, [
+          createElementVNode("div", _hoisted_5$1, [
             createElementVNode("button", {
               type: "button",
               onClick: _cache[0] || (_cache[0] = (...args) => $options.closeModal && $options.closeModal(...args))
@@ -899,13 +1126,13 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8, ["title", "onClose"]);
 }
 
-script$7.render = render$7;
-script$7.__scopeId = "data-v-5a8726e2";
-script$7.__file = "src/components/modalComponent/modalComponent.vue";
+script$6.render = render$6;
+script$6.__scopeId = "data-v-5a8726e2";
+script$6.__file = "src/components/modalComponent/modalComponent.vue";
 
 const tempStore$1 = container.resolve("tempStore");
 tempStore$1.set("myTest.name", "\uFF2F\uFF34\uFF34\uFF2F");
-var script$6 = {
+var script$5 = {
   name: "newComponent",
   // components: { XXXXXXXXXX },
   props: {},
@@ -927,9 +1154,9 @@ var script$6 = {
   }
 };
 
-const _hoisted_1$6 = { class: "mytestComponent-template" };
-function render$6(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("div", _hoisted_1$6, [
+const _hoisted_1$5 = { class: "mytestComponent-template" };
+function render$5(_ctx, _cache, $props, $setup, $data, $options) {
+  return openBlock(), createElementBlock("div", _hoisted_1$5, [
     _cache[2] || (_cache[2] = createElementVNode(
       "h2",
       null,
@@ -963,12 +1190,12 @@ function render$6(_ctx, _cache, $props, $setup, $data, $options) {
   ]);
 }
 
-script$6.render = render$6;
-script$6.__scopeId = "data-v-7de6ad4f";
-script$6.__file = "src/components/mytestComponent/mytestComponent.vue";
+script$5.render = render$5;
+script$5.__scopeId = "data-v-7de6ad4f";
+script$5.__file = "src/components/mytestComponent/mytestComponent.vue";
 
 const tempStore = container.resolve("tempStore");
-var script$5 = {
+var script$4 = {
   name: "newComponent",
   // components: { XXXXXXXXXX },
   props: {},
@@ -982,9 +1209,9 @@ var script$5 = {
   }
 };
 
-const _hoisted_1$5 = { class: "component-template" };
-function render$5(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("div", _hoisted_1$5, [
+const _hoisted_1$4 = { class: "component-template" };
+function render$4(_ctx, _cache, $props, $setup, $data, $options) {
+  return openBlock(), createElementBlock("div", _hoisted_1$4, [
     createElementVNode(
       "h2",
       null,
@@ -1009,240 +1236,12 @@ function render$5(_ctx, _cache, $props, $setup, $data, $options) {
   ]);
 }
 
-script$5.render = render$5;
-script$5.__scopeId = "data-v-81155522";
-script$5.__file = "src/components/newComponent/newComponent.vue";
-
-var script$4 = {
-  name: "paginationComponent",
-  props: {
-    items: { type: [Array, Object], required: true, default: () => [] },
-    pageSizeOptions: { type: Array, default: () => [5, 10, 20, 30], validator: (val) => val.every((n) => typeof n === "number") },
-    columns: { type: Array, default: () => [] },
-    showset: { type: Boolean, default: false }
-  },
-  data() {
-    return {
-      currentPage: 1,
-      pageSize: 5,
-      modalTitle: "",
-      modalData: null,
-      editableFields: [["id", "\u5E33\u865F"], ["name", "\u66B1\u7A31"], ["age", "\u5E74\u9F61"], ["email", "\u806F\u7D61\u4FE1\u7BB1"]],
-      dataFlex: [["id", "\u5E33\u865F", 3], ["name", "\u66B1\u7A31", 5], ["age", "\u5E74\u9F61", 1], ["email", "\u806F\u7D61\u4FE1\u7BB1", 6], ["date", "\u65E5\u671F", 3]]
-    };
-  },
-  computed: {
-    normalizedItems() {
-      if (Array.isArray(this.items)) return this.items;
-      if (this.items && typeof this.items === "object") return Object.values(this.items);
-      return [];
-    },
-    totalPages() {
-      return Math.ceil(this.normalizedItems.length / this.pageSize);
-    },
-    paginatedItems() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      return this.normalizedItems.slice(start, start + this.pageSize);
-    },
-    displayColumns() {
-      if (this.columns.length > 0) return this.columns;
-      const first = this.paginatedItems[0];
-      return first ? Object.keys(first) : [];
-    },
-    fieldDisplayMap() {
-      const map = {};
-      this.dataFlex.forEach(([key, label, flex = 1]) => {
-        map[key] = { label, flex };
-      });
-      return map;
-    }
-  },
-  methods: {
-    changePage(p) {
-      this.currentPage = p;
-    },
-    changeSize(s) {
-      this.pageSize = s;
-      this.currentPage = 1;
-    },
-    showModal(title, data) {
-      this.modalTitle = title;
-      this.modalData = data;
-    },
-    closeModal() {
-      this.modalData = null;
-    },
-    saveData(updated) {
-      const idx = this.items.findIndex((u) => u.id === updated.id);
-      if (idx !== -1) {
-        this.items[idx] = { ...updated };
-      }
-      this.closeModal();
-    }
-  }
-};
-
-const _hoisted_1$4 = { class: "pagination-wrapper" };
-const _hoisted_2$4 = { class: "controls" };
-const _hoisted_3$3 = ["value"];
-const _hoisted_4$3 = { class: "userBox" };
-const _hoisted_5$1 = { class: "nbr" };
-const _hoisted_6$1 = ["onClick"];
-const _hoisted_7$1 = { class: "pagination" };
-const _hoisted_8$1 = ["disabled"];
-const _hoisted_9$1 = ["disabled"];
-function render$4(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_modalComponent = resolveComponent("modalComponent");
-  return openBlock(), createElementBlock("div", _hoisted_1$4, [
-    createElementVNode("div", _hoisted_2$4, [
-      createElementVNode("label", null, [
-        _cache[4] || (_cache[4] = createTextVNode(
-          "\u6BCF\u9801\u986F\u793A\u6578",
-          -1
-          /* CACHED */
-        )),
-        withDirectives(createElementVNode(
-          "select",
-          {
-            "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.pageSize = $event),
-            onChange: _cache[1] || (_cache[1] = ($event) => $options.changeSize($data.pageSize))
-          },
-          [
-            (openBlock(true), createElementBlock(
-              Fragment,
-              null,
-              renderList($props.pageSizeOptions, (option) => {
-                return openBlock(), createElementBlock("option", {
-                  key: option,
-                  value: option
-                }, toDisplayString(option), 9, _hoisted_3$3);
-              }),
-              128
-              /* KEYED_FRAGMENT */
-            ))
-          ],
-          544
-          /* NEED_HYDRATION, NEED_PATCH */
-        ), [
-          [
-            vModelSelect,
-            $data.pageSize,
-            void 0,
-            { number: true }
-          ]
-        ])
-      ])
-    ]),
-    createElementVNode("ul", _hoisted_4$3, [
-      (openBlock(true), createElementBlock(
-        Fragment,
-        null,
-        renderList($options.paginatedItems, (user, ind) => {
-          return openBlock(), createElementBlock("li", {
-            key: user.id || ind
-          }, [
-            createElementVNode("div", null, [
-              createElementVNode(
-                "b",
-                _hoisted_5$1,
-                toDisplayString(ind + 1),
-                1
-                /* TEXT */
-              ),
-              (openBlock(true), createElementBlock(
-                Fragment,
-                null,
-                renderList($options.displayColumns, (field) => {
-                  return openBlock(), createElementBlock(
-                    "span",
-                    {
-                      style: normalizeStyle({ flex: $options.fieldDisplayMap[field]?.flex || 1 }),
-                      key: field
-                    },
-                    toDisplayString(user[field] ?? "\u4E0D\u63D0\u4F9B"),
-                    5
-                    /* TEXT, STYLE */
-                  );
-                }),
-                128
-                /* KEYED_FRAGMENT */
-              )),
-              $props.showset && user.age !== "\u4E0D\u63D0\u4F9B" ? (openBlock(), createElementBlock("b", {
-                key: 0,
-                class: "showsetBtn",
-                onClick: ($event) => $options.showModal("\u4FEE\u6539\u7528\u6236\u8CC7\u6599", user),
-                title: "\u4FEE\u6539"
-              }, [..._cache[5] || (_cache[5] = [
-                createElementVNode(
-                  "i",
-                  { class: "fa fa-cog" },
-                  null,
-                  -1
-                  /* CACHED */
-                )
-              ])], 8, _hoisted_6$1)) : createCommentVNode("v-if", true)
-            ])
-          ]);
-        }),
-        128
-        /* KEYED_FRAGMENT */
-      )),
-      createCommentVNode(" \u88DC\u7A7A\u767D\u884C\u8B93\u9AD8\u5EA6\u56FA\u5B9A"),
-      (openBlock(true), createElementBlock(
-        Fragment,
-        null,
-        renderList($data.pageSize - $options.paginatedItems.length, (n) => {
-          return openBlock(), createElementBlock("li", {
-            class: "blank-row",
-            key: "blank-" + n
-          }, [..._cache[6] || (_cache[6] = [
-            createElementVNode(
-              "div",
-              null,
-              "\xA0",
-              -1
-              /* CACHED */
-            )
-          ])]);
-        }),
-        128
-        /* KEYED_FRAGMENT */
-      ))
-    ]),
-    createElementVNode("div", _hoisted_7$1, [
-      createElementVNode("button", {
-        disabled: $data.currentPage === 1,
-        onClick: _cache[2] || (_cache[2] = ($event) => $options.changePage($data.currentPage - 1))
-      }, "\u4E0A\u4E00\u9801", 8, _hoisted_8$1),
-      createElementVNode(
-        "span",
-        null,
-        "\u7B2C " + toDisplayString($data.currentPage) + " / " + toDisplayString($options.totalPages) + " \u9801",
-        1
-        /* TEXT */
-      ),
-      createElementVNode("button", {
-        disabled: $data.currentPage === $options.totalPages,
-        onClick: _cache[3] || (_cache[3] = ($event) => $options.changePage($data.currentPage + 1))
-      }, "\u4E0B\u4E00\u9801", 8, _hoisted_9$1)
-    ]),
-    $data.modalData ? (openBlock(), createBlock(_component_modalComponent, {
-      key: 0,
-      title: $data.modalTitle,
-      data: $data.modalData,
-      "editable-fields": $data.editableFields,
-      onClose: $options.closeModal,
-      onSave: $options.saveData
-    }, null, 8, ["title", "data", "editable-fields", "onClose", "onSave"])) : createCommentVNode("v-if", true)
-  ]);
-}
-
 script$4.render = render$4;
-script$4.__scopeId = "data-v-7eb98b13";
-script$4.__file = "src/components/pagination-module/paginationComponent.vue";
+script$4.__scopeId = "data-v-81155522";
+script$4.__file = "src/components/newComponent/newComponent.vue";
 
 var script$3 = {
-  name: "PaginationComponent",
+  name: "paginationComponent",
   props: {
     items: { type: [Array, Object], required: true, default: () => [] },
     pageSizeOptions: { type: Array, default: () => [5, 10, 20, 30], validator: (val) => val.every((n) => typeof n === "number") },
@@ -1466,8 +1465,8 @@ function render$3(_ctx, _cache, $props, $setup, $data, $options) {
 }
 
 script$3.render = render$3;
-script$3.__scopeId = "data-v-fa0c1152";
-script$3.__file = "src/components/PaginationComponent/PaginationComponent.vue";
+script$3.__scopeId = "data-v-7eb98b13";
+script$3.__file = "src/components/pagination-module/paginationComponent.vue";
 
 var script$2 = {
   name: "ratingStarComponent",
@@ -1743,23 +1742,23 @@ script.__file = "src/components/todoListComponent/todoListComponent.vue";
 
 var vueEntry = {
   install(app) {
-    app.component("calendarComponent", script$f);
-    app.component("componentTemplate", script$e);
-    app.component("coverComponent", script$d);
-    app.component("DefaultLayout", script$c);
-    app.component("listComponent", script$b);
+    app.component("DefaultLayout", script$f);
+    app.component("PaginationComponent", script$e);
+    app.component("calendarComponent", script$d);
+    app.component("componentTemplate", script$c);
+    app.component("coverComponent", script$b);
     app.component("listUseStarTemp", script$a);
-    app.component("loginComponent", script$9);
-    app.component("menuComponent", script$8);
-    app.component("modalComponent", script$7);
-    app.component("mytestComponent", script$6);
-    app.component("newComponent", script$5);
-    app.component("paginationComponent", script$4);
-    app.component("PaginationComponent", script$3);
+    app.component("listComponent", script$9);
+    app.component("loginComponent", script$8);
+    app.component("menuComponent", script$7);
+    app.component("modalComponent", script$6);
+    app.component("mytestComponent", script$5);
+    app.component("newComponent", script$4);
+    app.component("paginationComponent", script$3);
     app.component("ratingStarComponent", script$2);
     app.component("tableComponent", script$1);
     app.component("todoListComponent", script);
   }
 };
 
-export { script$c as DefaultLayout, script$3 as PaginationComponent, script$f as calendarComponent, script$e as componentTemplate, script$d as coverComponent, vueEntry as default, script$b as listComponent, script$a as listUseStarTemp, script$9 as loginComponent, script$8 as menuComponent, script$7 as modalComponent, script$6 as mytestComponent, script$5 as newComponent, script$4 as paginationComponent, script$2 as ratingStarComponent, script$1 as tableComponent, script as todoListComponent };
+export { script$f as DefaultLayout, script$e as PaginationComponent, script$d as calendarComponent, script$c as componentTemplate, script$b as coverComponent, vueEntry as default, script$9 as listComponent, script$a as listUseStarTemp, script$8 as loginComponent, script$7 as menuComponent, script$6 as modalComponent, script$5 as mytestComponent, script$4 as newComponent, script$3 as paginationComponent, script$2 as ratingStarComponent, script$1 as tableComponent, script as todoListComponent };
