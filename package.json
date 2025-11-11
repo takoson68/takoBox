@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "build": "rollup -c",
-    "build:watch": "rollup -c -w"
+    "build": "node scripts/generate-vue-index.mjs && rollup -c",
+    "build:watch": "node scripts/generate-vue-index.mjs && rollup -c -w"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",

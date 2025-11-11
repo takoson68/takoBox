@@ -138,7 +138,8 @@ function generateVueEntryPlugin() {
     name: 'generate-vue-entry',
     buildStart() {
       const vueEntryPath = path.resolve(__dirname, 'src/components/vue-entry.js')
-      const vueFiles = glob.sync(path.resolve(__dirname, 'src/components/*/*.vue'))
+      // Use glob with cwd to be Windows-safe
+      const vueFiles = glob.sync('src/components/*/*.vue', { cwd: __dirname, absolute: true })
 
       // ➤ 自動生成每一個元件的 import 與註冊名稱
       const imports = []
@@ -217,7 +218,7 @@ const vueComponents = {
     // 若你想要 output 到資料夾，可改用 output.dir 及 entryFileNames
   },
   plugins: [
-    generateVueEntryPlugin(),
+    // generateVueEntryPlugin(), // handled by scripts/generate-vue-index.mjs before build
     vue({
       preprocessStyles: true,
       preprocessOptions: {
